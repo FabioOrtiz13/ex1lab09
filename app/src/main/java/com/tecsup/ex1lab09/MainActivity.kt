@@ -12,6 +12,10 @@ import androidx.navigation.compose.rememberNavController
 import com.tecsup.ex1lab09.ui.theme.Ex1lab09Theme
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 
 class MainActivity : ComponentActivity() {
 
@@ -48,12 +52,26 @@ fun ProgPrincipal(servicio: ProductApiService) {
     }
 }
 
-// Contenido con NavHost, rutas etc. (lo defines luego o lo actualizas con tus composables)
 @Composable
 fun Contenido(
     modifier: Modifier = Modifier,
     navController: androidx.navigation.NavHostController,
     servicio: ProductApiService
 ) {
-    // Aquí va el NavHost con rutas a tu ScreenProducts y ScreenProductDetail
+    NavHost(
+        navController = navController,
+        startDestination = "productList",
+        modifier = modifier
+    ) {
+        composable("productList") {
+            ScreenProducts(navController = navController, servicio = servicio)
+        }
+        composable(
+            route = "productDetail/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getInt("id") ?: 0
+            ScreenProductDetail(navController = navController, servicio = servicio, id = id)
+        }
+    }
 }
