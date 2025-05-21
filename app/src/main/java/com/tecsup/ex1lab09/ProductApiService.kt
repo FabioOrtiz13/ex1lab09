@@ -12,7 +12,3 @@ interface ProductApiService {
     suspend fun getProductById(@Path("id") id: Int): ProductModel
 }
 
-// Respuesta para el listado que tiene un campo "products"
-data class ProductResponse(
-    @SerializedName("products") val products: List<ProductModel>
-)
