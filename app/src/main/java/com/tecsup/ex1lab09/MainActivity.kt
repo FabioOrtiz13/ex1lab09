@@ -16,6 +16,10 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.compose.material3.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ShoppingCart
+import androidx.navigation.NavHostController
 
 class MainActivity : ComponentActivity() {
 
@@ -43,7 +47,9 @@ class MainActivity : ComponentActivity() {
 fun ProgPrincipal(servicio: ProductApiService) {
     val navController = rememberNavController()
 
-    Scaffold { paddingValues ->
+    Scaffold(
+        bottomBar = { BarraInferior(navController) }
+    ) { paddingValues ->
         Contenido(
             modifier = Modifier.padding(paddingValues),
             navController = navController,
@@ -75,3 +81,22 @@ fun Contenido(
         }
     }
 }
+
+@Composable
+fun BarraInferior(navController: NavHostController) {
+    NavigationBar {
+        NavigationBarItem(
+            icon = { Icon(Icons.Outlined.ShoppingCart, contentDescription = "Productos") },
+            label = { Text("Productos") },
+            selected = navController.currentDestination?.route == "productList",
+            onClick = {
+                navController.navigate("productList") {
+                    // Evita múltiples copias en backstack
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }
+        )
+    }
+}
+
